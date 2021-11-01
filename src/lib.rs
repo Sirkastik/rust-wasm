@@ -74,6 +74,29 @@ pub fn blur(encoded_file: &str, blur_sigma: f32) -> String {
 }
 
 #[wasm_bindgen]
+pub fn contrast(encoded_file: &str, c_value: f32) -> String {
+    log(&"Contrast called...".into());
+
+    let base64_to_vector = decode(encoded_file).unwrap();
+    log(&"...Image decoded".into());
+
+    let mut img = load_from_memory(&base64_to_vector).unwrap();
+    log(&"...Image loaded".into());
+
+    img = img.adjust_contrast(c_value);
+    log(&"...Contrast effect applied".into());
+
+    let mut buffer = vec![];
+    img.write_to(&mut buffer, Png).unwrap();
+    log(&"...New image written".into());
+
+    let encoded_img = encode(&buffer);
+    let data_url = format!("data:image/png;base64,{}", encoded_img);
+
+    data_url
+}
+
+#[wasm_bindgen]
 pub fn rotate_90(encoded_file: &str) -> String {
     log(&"Rotate90 called...".into());
 

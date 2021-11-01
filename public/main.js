@@ -44,11 +44,12 @@ const init = async () => {
             slider.step = .1
             slider.value = 1.5
             effect_value.innerHTML = slider.value;
-        } else if (effect.value == 'brighten') {
+        } else if (effect.value == 'brighten' || effect.value == 'contrast') {
             sliderbox.classList.remove('hidden')
-            slider.max = 50
+            slider.min = -25
+            slider.max = 25
             slider.step = 1
-            slider.value = 25
+            slider.value = 0
             effect_value.innerHTML = slider.value;
         } else {
             sliderbox.classList.add('hidden')
@@ -62,10 +63,8 @@ const init = async () => {
     down_btn.onclick = () => {
         link.download = `img-${effect.value}.png`;
         link.click()
-        down_btn.removeChild(link);
         down_btn.classList.add("hidden")
         image.src = ''
-        delete link;
     }
 
     submit_btn.onclick = () => {
@@ -103,6 +102,9 @@ const process_img = (rustApp, base64, effect, value) => {
             break;
         case 'crop':
             img_data_url = rustApp.crop(base64, 0, 0, 320, 180);
+            break;
+        case 'contrast':
+            img_data_url = rustApp.contrast(base64, parseFloat(value));
             break;
         default:
             img_data_url = rustApp.grayscale(base64);
