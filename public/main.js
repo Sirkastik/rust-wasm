@@ -9,27 +9,24 @@ const init = async () => {
         return;
     }
 
-    const file_input = document.getElementById('upload')
-    const effect = document.getElementById('effect')
-    const submit_btn = document.getElementById('submit')
-    const slider = document.getElementById("myRange");
-    const sliderbox = document.getElementById("slider");
-    const fileReader = new FileReader()
-    const image = document.getElementById('new-img')
-
-    let effect_value = document.getElementById("value");
+    const file_input = $('upload')
+    const effect = $('effect')
+    const submit_btn = $('submit')
+    const slider = $("myRange");
+    const sliderbox = $("slider");
+    const image = $('new-img')
+    const down_btn = $('download')
+    const link = $('link')
+    
+    let effect_value = $("value");
     effect_value.innerHTML = slider.value;
-
-
-    const down_btn = document.getElementById('download')
-    const link = document.getElementById('link')
-
+    
+    const fileReader = new FileReader()
     let base64;
 
     file_input.onchange = () => {
         fileReader.readAsDataURL(file_input.files[0])
-        document.getElementById('new-img')
-            .setAttribute('src', window.URL.createObjectURL(file_input.files[0]))
+        image.src = window.URL.createObjectURL(file_input.files[0])
         down_btn.classList.add("hidden")
     }
 
@@ -42,6 +39,7 @@ const init = async () => {
     effect.onchange = () => {
         if (effect.value == 'blur') {
             sliderbox.classList.remove('hidden')
+            slider.min = 0
             slider.max = 3
             slider.step = .1
             slider.value = 1.5
@@ -79,6 +77,10 @@ const init = async () => {
             alert('Please upload image')
         }
     }
+}
+
+const $ = (id) => {
+    return document.getElementById(id)
 }
 
 const process_img = (rustApp, base64, effect, value) => {
