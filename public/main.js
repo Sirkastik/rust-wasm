@@ -28,6 +28,7 @@ const init = async () => {
         fileReader.readAsDataURL(file_input.files[0])
         document.getElementById('new-img')
             .setAttribute('src', window.URL.createObjectURL(file_input.files[0]))
+        down_btn.classList.add("hidden")
     }
 
     fileReader.onloadend = () => {
@@ -58,8 +59,9 @@ const init = async () => {
         effect_value.innerHTML = slider.value;
     }
 
-    link.onclick = () => {
+    down_btn.onclick = () => {
         link.download = `img-${effect.value}.png`;
+        link.click()
         down_btn.removeChild(link);
         down_btn.classList.add("hidden")
         image.src = ''
