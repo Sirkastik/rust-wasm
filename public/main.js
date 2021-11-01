@@ -1,3 +1,5 @@
+require('./style.css')
+
 const init = async () => {
     let rustApp = null
     try {
