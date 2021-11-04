@@ -28,6 +28,29 @@ pub fn grayscale(encoded_file: &str) -> String {
 }
 
 #[wasm_bindgen]
+pub fn invert(encoded_file: &str) -> String {
+    log(&"Invert called...".into());
+
+    let base64_to_vector = decode(encoded_file).unwrap();
+    log(&"...Image decoded".into());
+
+    let mut img = load_from_memory(&base64_to_vector).unwrap();
+    log(&"...Image loaded".into());
+
+    img.invert();
+    log(&"...Invert effect applied".into());
+
+    let mut buffer = vec![];
+    img.write_to(&mut buffer, Png).unwrap();
+    log(&"...New image written".into());
+
+    let encoded_img = encode(&buffer);
+    let data_url = format!("data:image/png;base64,{}", encoded_img);
+
+    data_url
+}
+
+#[wasm_bindgen]
 pub fn brighten(encoded_file: &str, brighten_value: i32) -> String {
     log(&"Brighten called...".into());
 
@@ -74,6 +97,29 @@ pub fn blur(encoded_file: &str, blur_sigma: f32) -> String {
 }
 
 #[wasm_bindgen]
+pub fn sharpen(encoded_file: &str, blur_sigma: f32, threshold: i32) -> String {
+    log(&"Sharpen called...".into());
+
+    let base64_to_vector = decode(encoded_file).unwrap();
+    log(&"...Image decoded".into());
+
+    let mut img = load_from_memory(&base64_to_vector).unwrap();
+    log(&"...Image loaded".into());
+
+    img = img.unsharpen(blur_sigma, threshold);
+    log(&"...Sharpen effect applied".into());
+
+    let mut buffer = vec![];
+    img.write_to(&mut buffer, Png).unwrap();
+    log(&"...New image written".into());
+
+    let encoded_img = encode(&buffer);
+    let data_url = format!("data:image/png;base64,{}", encoded_img);
+
+    data_url
+}
+
+#[wasm_bindgen]
 pub fn contrast(encoded_file: &str, c_value: f32) -> String {
     log(&"Contrast called...".into());
 
@@ -85,6 +131,53 @@ pub fn contrast(encoded_file: &str, c_value: f32) -> String {
 
     img = img.adjust_contrast(c_value);
     log(&"...Contrast effect applied".into());
+
+    let mut buffer = vec![];
+    img.write_to(&mut buffer, Png).unwrap();
+    log(&"...New image written".into());
+
+    let encoded_img = encode(&buffer);
+    let data_url = format!("data:image/png;base64,{}", encoded_img);
+
+    data_url
+}
+
+
+#[wasm_bindgen]
+pub fn flip_vertical(encoded_file: &str) -> String {
+    log(&"Flip_vertical called...".into());
+
+    let base64_to_vector = decode(encoded_file).unwrap();
+    log(&"...Image decoded".into());
+
+    let mut img = load_from_memory(&base64_to_vector).unwrap();
+    log(&"...Image loaded".into());
+
+    img = img.flipv();
+    log(&"...Flip_vertical effect applied".into());
+
+    let mut buffer = vec![];
+    img.write_to(&mut buffer, Png).unwrap();
+    log(&"...New image written".into());
+
+    let encoded_img = encode(&buffer);
+    let data_url = format!("data:image/png;base64,{}", encoded_img);
+
+    data_url
+}
+
+#[wasm_bindgen]
+pub fn flip_horizontal(encoded_file: &str) -> String {
+    log(&"Flip_horizontal called...".into());
+
+    let base64_to_vector = decode(encoded_file).unwrap();
+    log(&"...Image decoded".into());
+
+    let mut img = load_from_memory(&base64_to_vector).unwrap();
+    log(&"...Image loaded".into());
+
+    img = img.fliph();
+    log(&"...Flip_horizontal effect applied".into());
 
     let mut buffer = vec![];
     img.write_to(&mut buffer, Png).unwrap();
