@@ -4,7 +4,7 @@ const WasmPackPlugin = require('@wasm-tool/wasm-pack-plugin')
 const { CleanWebpackPlugin } = require("clean-webpack-plugin")
 
 module.exports = {
-    entry: "./public/main.js",
+    entry: "./public/script.js",
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: 'index.js'
