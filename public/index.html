@@ -3,20 +3,20 @@
 
 <head>
   <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>Wasp Editor</title>
-  <link rel="shortcut icon" type="image/jpg" href="favicon.ico" />
+  <link rel="icon" href="favicon.ico" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Secular+One&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css"
-    integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA=="
-    crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="manifest" href="manifest.json">
 </head>
 
 <body>
   <div id="app">
-    <h1>WASP EDITOR</h1>
+    <h2>WASP EDITOR</h2>
     <div class="bar" id="bar">
       <div class="icon"><span class="material-icons">contrast</span>
         <span class="effect">Contrast</span>
@@ -24,9 +24,10 @@
       <div class="icon"><span class="material-icons">brightness_high</span>
         <span class="effect">Brightness</span>
       </div>
-      <div class="icon"><span class="material-icons">details</span>
+      <div class="icon sharpen"><span class="material-icons">details</span>
         <span class="effect">Sharpen</span>
       </div>
+
       <div class="icon"><span class="material-icons">blur_on</span>
         <span class="effect">Blur</span>
       </div>
@@ -36,7 +37,7 @@
       <div class="icon"><span class="material-icons">invert_colors</span>
         <span class="effect">Invert</span>
       </div>
-      <div class="icon" style="color: #2b2b2b; cursor: unset; pointer-events: none;"><span
+      <div class="icon crop" style="color: #5c5858; cursor: unset; pointer-events: none;"><span
           class="material-icons">crop</span>
         <span class="effect">Crop</span>
       </div>
@@ -46,9 +47,11 @@
     </div>
     <div class="compare" title="Compare with original" id="compare"><span class="material-icons">compare</span></div>
     <div class="right">
+      <div title="Undo" id="undo" class="pair"><span class="material-icons">undo</span></div>
       <div title="Rotate 90 cw" id="plus90" class="pair"><span class="material-icons">rotate_90_degrees_cw</span></div>
       <div title="Rotate 90 ccw" id="min90" class="pair"><span class="material-icons">rotate_90_degrees_ccw</span></div>
     </div>
+    <div class="rbg"></div>
     <div title="Download Image" id="download"><span class="material-icons">download_for_offline</span></div>
     <div id="main">
       <div id="message" class="point-none">Click here <label for="upload">
@@ -57,6 +60,9 @@
       <div class="img">
         <div id="delete">
           <span class="material-icons">delete</span>
+        </div>
+        <div id="loading">
+          <span class="material-icons">loop</span>
         </div>
 
         <img id="new-img" class="">

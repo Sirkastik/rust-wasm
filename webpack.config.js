@@ -2,6 +2,7 @@ const path = require("path")
 const HTMLWebpackPlugin = require('html-webpack-plugin')
 const WasmPackPlugin = require('@wasm-tool/wasm-pack-plugin')
 const { CleanWebpackPlugin } = require("clean-webpack-plugin")
+const { GenerateSW } = require('workbox-webpack-plugin');
 
 module.exports = {
     entry: "./public/script.js",
@@ -17,6 +18,7 @@ module.exports = {
             crateDirectory: path.resolve(__dirname, '.')
         }),
         new CleanWebpackPlugin(),
+        new GenerateSW()
     ],
     module: {
         rules: [
@@ -28,6 +30,5 @@ module.exports = {
     },
     experiments: {
         asyncWebAssembly: true,
-        topLevelAwait: true,
     }
 }

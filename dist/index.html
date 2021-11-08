@@ -1,1 +1,66 @@
-<!doctype html><html><head><meta charset="utf-8"><title>Wasp Editor</title><link rel="shortcut icon" type="image/jpg" href="favicon.ico"/><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Secular+One&display=swap" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA==" crossorigin="anonymous" referrerpolicy="no-referrer"/><link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"><script defer="defer" src="index.js"></script></head><body><div id="app"><h1>WASP EDITOR</h1><div class="bar" id="bar"><div class="icon"><span class="material-icons">contrast</span> <span class="effect">Contrast</span></div><div class="icon"><span class="material-icons">brightness_high</span> <span class="effect">Brightness</span></div><div class="icon"><span class="material-icons">details</span> <span class="effect">Sharpen</span></div><div class="icon"><span class="material-icons">blur_on</span> <span class="effect">Blur</span></div><div class="icon"><span class="material-icons">filter_b_and_w</span> <span class="effect">Grayscale</span></div><div class="icon"><span class="material-icons">invert_colors</span> <span class="effect">Invert</span></div><div class="icon" style="color: #2b2b2b; cursor: unset; pointer-events: none;"><span class="material-icons">crop</span> <span class="effect">Crop</span></div><div class="icon"><span class="material-icons">flip</span> <span class="effect">Flip</span></div></div><div class="compare" title="Compare with original" id="compare"><span class="material-icons">compare</span></div><div class="right"><div title="Rotate 90 cw" id="plus90" class="pair"><span class="material-icons">rotate_90_degrees_cw</span></div><div title="Rotate 90 ccw" id="min90" class="pair"><span class="material-icons">rotate_90_degrees_ccw</span></div></div><div title="Download Image" id="download"><span class="material-icons">download_for_offline</span></div><div id="main"><div id="message" class="point-none">Click here <label for="upload"><h1>+</h1></label> ...or drag and and drop a PNG image to start editing</div><div class="img"><div id="delete"><span class="material-icons">delete</span></div><img id="new-img" class=""></div></div><div id="sliderbox" class="sliderdiv hidden"><div class="slider"><div class="track"></div><div class="thumb" id="thumb"></div></div><div id="value">0</div></div><input type="file" id="upload" accept=".png" class="hidden"> <a href="" class="hidden" id="link">download</a></div></body></html>
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Wasp Editor</title>
+    <link rel="icon" href="favicon.ico" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Secular+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="manifest" href="manifest.json">
+    <script defer="defer" src="index.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <h2>WASP EDITOR</h2>
+        <div class="bar" id="bar">
+            <div class="icon"><span class="material-icons">contrast</span> <span class="effect">Contrast</span></div>
+            <div class="icon"><span class="material-icons">brightness_high</span> <span class="effect">Brightness</span>
+            </div>
+            <div class="icon sharpen"><span class="material-icons">details</span> <span class="effect">Sharpen</span>
+            </div>
+            <div class="icon"><span class="material-icons">blur_on</span> <span class="effect">Blur</span></div>
+            <div class="icon"><span class="material-icons">filter_b_and_w</span> <span class="effect">Grayscale</span>
+            </div>
+            <div class="icon"><span class="material-icons">invert_colors</span> <span class="effect">Invert</span></div>
+            <div class="icon crop" style="color: #5c5858; cursor: unset; pointer-events: none;"><span
+                    class="material-icons">crop</span> <span class="effect">Crop</span></div>
+            <div class="icon"><span class="material-icons">flip</span> <span class="effect">Flip</span></div>
+        </div>
+        <div class="compare" title="Compare with original" id="compare"><span class="material-icons">compare</span>
+        </div>
+        <div class="right">
+            <div title="Undo" id="undo" class="pair"><span class="material-icons">undo</span></div>
+            <div title="Rotate 90 cw" id="plus90" class="pair"><span class="material-icons">rotate_90_degrees_cw</span>
+            </div>
+            <div title="Rotate 90 ccw" id="min90" class="pair"><span class="material-icons">rotate_90_degrees_ccw</span>
+            </div>
+        </div>
+        <div class="rbg"></div>
+        <div title="Download Image" id="download"><span class="material-icons">download_for_offline</span></div>
+        <div id="main">
+            <div id="message" class="point-none">Click here <label for="upload">
+                    <h1>+</h1>
+                </label> ...or drag and and drop a PNG image to start editing</div>
+            <div class="img">
+                <div id="delete"><span class="material-icons">delete</span></div>
+                <div id="loading"><span class="material-icons">loop</span></div><img id="new-img" class="">
+            </div>
+        </div>
+        <div id="sliderbox" class="sliderdiv hidden">
+            <div class="slider">
+                <div class="track"></div>
+                <div class="thumb" id="thumb"></div>
+            </div>
+            <div id="value">0</div>
+        </div><input type="file" id="upload" accept=".png" class="hidden"> <a href="" class="hidden"
+            id="link">download</a>
+    </div>
+</body>
+
+</html>

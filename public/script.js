@@ -1,99 +1,14 @@
-import {
-    grayscale, invert, flip_horizontal,
-    rotate_90, rotate_180, rotate_270,
-    blur, sharpen, brighten, crop, contrast
-} from '../pkg';
-
 import './style.css';
+import process_img from '../src/js/processImage';
+import { elems, buttons, inputs } from '../src/js/dom';
+import '../src/js/registerSW'
 
 // Global variables
-let base64, imgDataUrl, imageInit;
+let base64, imgDataUrl;
+let imgArr = [];
 let min, max, value, effect;
 let x, pos;
 const fileReader = new FileReader()
-
-// helper function
-const $ = (id) => {
-    return document.getElementById(id)
-}
-
-// function to get a random number
-const getRnd = (min, max) => {
-    return Math.floor(Math.random() * (max - min)) + min;
-}
-
-// function to process the image
-const process_img = () => {
-    let imgDataURL;
-    switch (effect) {
-        case 'grayscale':
-            imgDataURL = grayscale(base64);
-            break;
-        case 'invert':
-            imgDataURL = invert(base64);
-            break;
-        case 'flip':
-            imgDataURL = flip_horizontal(base64);
-            break;
-        case 'rotate_90':
-            imgDataURL = rotate_90(base64);
-            break;
-        case 'rotate_180':
-            imgDataURL = rotate_180(base64);
-            break;
-        case 'rotate_270':
-            imgDataURL = rotate_270(base64);
-            break;
-        case 'blur':
-            imgDataURL = blur(base64, parseFloat(value));
-            break;
-        case 'sharpen':
-            imgDataURL = sharpen(base64, parseFloat(value), getRnd(60, 100));
-            break;
-        case 'brightness':
-            imgDataURL = brighten(base64, parseInt(value));
-            break;
-        case 'crop':
-            imgDataURL = crop(base64, 0, 0, 320, 180);
-            break;
-        case 'contrast':
-            imgDataURL = contrast(base64, parseFloat(value));
-            break;
-        default:
-            imgDataURL = grayscale(base64);
-    }
-    return imgDataURL
-}
-
-// initialize DOM
-const elems = () => {
-    return {
-        message: $('message'),
-        slider: $("sliderbox"),
-        img: $('new-img'),
-        output: $("value"),
-        link: $('link'),
-    }
-}
-
-const buttons = () => {
-    return {
-        icons: document.querySelectorAll('.icon'),
-        compare: $('compare'),
-        rotatecw: $('plus90'),
-        rotateccw: $('min90'),
-        delbtn: $('delete'),
-        downbtn: $('download')
-    }
-}
-
-const inputs = () => {
-    return {
-        upload: $('upload'),
-        main: $('main'),
-        knob: $('thumb')
-    }
-}
 
 // computed values
 const processNow = () => {
@@ -108,15 +23,23 @@ const initial = (parentWidth) => {
     return ((value - min) / (max - min) * parentWidth) - 10;
 }
 
-
 // functions to be used
 const resetColor = (children) => {
     for (let index = 0; index < children.length; index++) {
-        children[index].style.color = "#8e8eab"
+        children[index].style.color = "#101020"
     }
 }
 
-const showSlider = () => {
+const setLoading = (value) => {
+    const { loader } = elems()
+    if (value) {
+        loader.style.opacity = "1"
+    } else {
+        loader.style.opacity = "0"
+    }
+}
+
+const show_slider = () => {
     const { slider } = elems()
     if (effect == 'blur') {
         show(.5, 9.5, 5)
@@ -166,21 +89,33 @@ const mouseMoveHandler = (e) => {
 };
 // Triggered when user drops the knob
 const mouseUpHandler = () => {
-    const { img } = elems()
-    imgDataUrl = process_img()
-    img.src = imgDataUrl;
-    base64 = imgDataUrl.replace(
-        /^data:image\/(png|jpeg|jpg);base64,/, ''
-    )
     // Remove the handlers of `mousemove` and `mouseup`
     document.removeEventListener('mousemove', mouseMoveHandler);
     document.removeEventListener('mouseup', mouseUpHandler);
+    // process image
+    process();
 };
+
+const process = () => {
+    const { icons } = buttons()
+    resetColor(icons[0].parentElement.children)
+    setLoading(true)
+    const { img } = elems()
+    setTimeout(() => {
+        imgDataUrl = process_img(effect, base64, value)
+        img.src = imgDataUrl;
+        base64 = imgDataUrl.replace(
+            /^data:image\/(png|jpeg|jpg);base64,/, ''
+        )
+        imgArr.push(imgDataUrl)
+        setLoading(false)
+    }, 10);
+}
 
 // initialize events
 (() => {
-    const { icons, compare, rotatecw, rotateccw, delbtn, downbtn } = buttons()
-    const { message, slider, img, link } = elems()
+    const { icons, compare, rotatecw, rotateccw, delbtn, downbtn, undo } = buttons()
+    const { message, slider, img, link, loader } = elems()
     const { upload, main, knob } = inputs()
 
     // START OF BUTTONS EVENTS ...
@@ -196,21 +131,17 @@ const mouseUpHandler = () => {
                 const apply = arr[1].toLowerCase()
                 effect = apply
                 if (processNow() == true) {
-                    imgDataUrl = process_img()
-                    img.src = imgDataUrl;
-                    base64 = imgDataUrl.replace(
-                        /^data:image\/(png|jpeg|jpg);base64,/, ''
-                    )
+                    process()
                 }
-                showSlider()
+                show_slider()
             }
         }
     })
 
     // compare image with original
     compare.onmousedown = () => {
-        if (base64 && imageInit) {
-            img.src = imageInit
+        if (base64 && imgArr[0]) {
+            img.src = imgArr[0]
         }
     }
     compare.onmouseup = () => {
@@ -223,11 +154,7 @@ const mouseUpHandler = () => {
     rotatecw.onclick = () => {
         if (base64) {
             effect = 'rotate_90'
-            imgDataUrl = process_img()
-            img.src = imgDataUrl;
-            base64 = imgDataUrl.replace(
-                /^data:image\/(png|jpeg|jpg);base64,/, ''
-            )
+            process();
         } else {
             alert("Please upload an image");
         }
@@ -235,15 +162,13 @@ const mouseUpHandler = () => {
     rotateccw.onclick = () => {
         if (base64) {
             effect = 'rotate_270'
-            imgDataUrl = process_img()
-            img.src = imgDataUrl;
-            base64 = imgDataUrl.replace(
-                /^data:image\/(png|jpeg|jpg);base64,/, ''
-            )
+            process();
         } else {
             alert("Please upload an image");
         }
     }
+
+    loader.style.opacity = "0"
 
     // delete image
     delbtn.classList.add('hidden')
@@ -257,6 +182,19 @@ const mouseUpHandler = () => {
         base64 = null
     }
 
+    // undo
+    undo.onclick = () => {
+        let size = imgArr.length;
+        if (size > 1) {
+            imgDataUrl = imgArr[size - 2]
+            img.src = imgDataUrl
+            base64 = imgArr[size - 2].replace(
+                /^data:image\/(png|jpeg|jpg);base64,/, ''
+            )
+            imgArr.length = size - 1;
+        }
+    }
+
     // download image
     downbtn.onclick = () => {
         if (base64) {
@@ -264,7 +202,7 @@ const mouseUpHandler = () => {
             link.download = `edited.png`;
             link.href = imgDataUrl;
             link.click()
-            $('delete').classList.add('hidden')
+            delbtn.classList.add('hidden')
             message.classList.remove("hidden")
             slider.classList.add('hidden')
             // downbtn.classList.add("gray")
@@ -286,7 +224,7 @@ const mouseUpHandler = () => {
         message.classList.add("hidden")
     }
     fileReader.onloadend = () => {
-        imageInit = fileReader.result
+        imgArr.push(fileReader.result)
         base64 = fileReader.result.replace(
             /^data:image\/(png|jpeg|jpg);base64,/, ''
         )
