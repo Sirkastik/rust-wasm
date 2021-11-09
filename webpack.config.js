@@ -1,14 +1,15 @@
 const path = require("path")
 const HTMLWebpackPlugin = require('html-webpack-plugin')
 const WasmPackPlugin = require('@wasm-tool/wasm-pack-plugin')
-const { CleanWebpackPlugin } = require("clean-webpack-plugin")
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 const { GenerateSW } = require('workbox-webpack-plugin');
 
 module.exports = {
-    entry: "./public/script.js",
+    entry: "./src/js/script.js",
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: 'index.js'
+        filename: '[name].[contenthash].js',
+        clean: true
     },
     plugins: [
         new HTMLWebpackPlugin({
@@ -17,16 +18,38 @@ module.exports = {
         new WasmPackPlugin({
             crateDirectory: path.resolve(__dirname, '.')
         }),
-        new CleanWebpackPlugin(),
-        new GenerateSW()
+        new GenerateSW({
+            clientsClaim: true,
+            skipWaiting: true,
+        }),
+        new CopyWebpackPlugin({
+            patterns: [
+                { from: 'public/icons/', to: 'icons/' },
+                { from: 'public/favicon.ico' },
+                { from: 'public/manifest.json' }
+            ]
+        })
     ],
     module: {
         rules: [
             {
-                test: /\.css$/,
+                test: /\.css$/i,
                 use: ['style-loader', 'css-loader']
             },
         ],
+    },
+    optimization: {
+        moduleIds: 'deterministic',
+        runtimeChunk: 'single',
+        splitChunks: {
+            cacheGroups: {
+                vendor: {
+                    test: /[\\/]node_modules[\\/]/,
+                    name: 'vendors',
+                    chunks: 'all',
+                },
+            },
+        },
     },
     experiments: {
         asyncWebAssembly: true,
