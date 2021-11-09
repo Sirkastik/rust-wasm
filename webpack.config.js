@@ -8,7 +8,7 @@ module.exports = {
     entry: "./src/js/script.js",
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: '[name].[contenthash].js',
+        filename: 'index.js',
         clean: true
     },
     plugins: [
@@ -31,12 +31,10 @@ module.exports = {
         })
     ],
     module: {
-        rules: [
-            {
-                test: /\.css$/,
-                use: ['style-loader', 'css-loader']
-            },
-        ],
+        rules: [{
+            test: /\.css$/,
+            use: ['style-loader', 'css-loader']
+        }],
     },
     experiments: {
         asyncWebAssembly: true,
