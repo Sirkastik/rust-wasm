@@ -1,4 +1,4 @@
-import './style.css';
+import '../css/style.css';
 import process_img from './processImage';
 import { elems, buttons, inputs } from './dom';
 import './registerSW'

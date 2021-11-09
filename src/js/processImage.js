@@ -2,7 +2,7 @@ import {
     grayscale, invert, flip_horizontal,
     rotate_90, rotate_180, rotate_270,
     blur, sharpen, brighten, crop, contrast
-} from "../pkg"
+} from "../../pkg"
 
 // function to get a random number
 const getRnd = (min, max) => {

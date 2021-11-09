@@ -5,7 +5,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const { GenerateSW } = require('workbox-webpack-plugin');
 
 module.exports = {
-    entry: './public/main.js',
+    entry: './src/js/script.js',
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: 'index.js',
