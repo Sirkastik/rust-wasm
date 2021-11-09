@@ -83,6 +83,12 @@ h2 {
 	margin-right: 4rem;
 }
 
+.plus {
+	font-size: 2.5em;
+	font-weight: 800;
+	display: block;
+}
+
 .drag {
 	background: #8e8eab4a;
 }
@@ -185,7 +191,7 @@ img {
 	background: var(--main);
 	color: var(--bg);
 	z-index: 3;
-	opacity: 0.4;
+	opacity: 0;
 	cursor: pointer;
 }
 
@@ -197,6 +203,7 @@ img {
 	padding: 0.3rem;
 	color: var(--color);
 	z-index: 3;
+	opacity: 0;
 	pointer-events: none;
 	animation: loading 1s linear infinite;
 }

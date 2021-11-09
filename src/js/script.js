@@ -8,7 +8,10 @@ let base64, imgDataUrl;
 let imgArr = [];
 let min, max, value, effect;
 let x, pos;
+let loading = false;
 const fileReader = new FileReader()
+const loadEvent = new Event('loading');
+
 
 // computed values
 const processNow = () => {
@@ -30,12 +33,13 @@ const resetColor = (children) => {
     }
 }
 
-const setLoading = (value) => {
+const setLoading = () => {
     const { loader } = elems()
-    if (value) {
-        loader.style.opacity = "1"
+    if (loading == false) {
+        loader.style.opacity = 0
     } else {
-        loader.style.opacity = "0"
+        console.log(loading);
+        loader.style.opacity = 1
     }
 }
 
@@ -98,9 +102,11 @@ const mouseUpHandler = () => {
 };
 
 const process = () => {
+    loading = true
+    window.dispatchEvent(loadEvent);
     const { icons } = buttons()
     resetColor(icons[0].parentElement.children)
-    setLoading(true)
+    // setLoading(true)
     const { img } = elems()
     setTimeout(() => {
         imgDataUrl = process_img(effect, base64, value)
@@ -109,7 +115,8 @@ const process = () => {
             /^data:image\/(png|jpeg|jpg);base64,/, ''
         )
         imgArr.push(imgDataUrl)
-        setLoading(false)
+        loading = false
+        window.dispatchEvent(loadEvent);
     }, 10);
 }
 
@@ -118,6 +125,12 @@ const process = () => {
     const { icons, compare, rotatecw, rotateccw, delbtn, downbtn, undo } = buttons()
     const { message, slider, img, output, link, loader } = elems()
     const { upload, main, knob } = inputs()
+
+    // Listen for the event.
+    window.addEventListener('loading', setLoading, false);
+
+    // Dispatch the event.
+    window.dispatchEvent(loadEvent);
 
     // START OF BUTTONS EVENTS ...
     // left panel icons onclick
@@ -236,6 +249,7 @@ const process = () => {
         fileReader.readAsDataURL(upload.files[0])
         img.src = window.URL.createObjectURL(upload.files[0])
         delbtn.classList.remove("hidden")
+        delbtn.style.opacity = 0.4
         message.classList.add("hidden")
     }
     fileReader.onloadend = () => {
@@ -284,14 +298,12 @@ const process = () => {
     };
     knob.ontouchstart = (e) => {
         e.preventDefault()
-        console.log("touchstart...");
         // Get the current mouse position
         x = e.targetTouches[0].clientX;
         pos = knob.style.left
         pos = parseInt(pos.replace('px', ''))
     }
     knob.ontouchmove = (e) => {
-        console.log("move...");
         // How far the mouse has been moved
         const dx = e.targetTouches[0].clientX - x;
         const sliderWidth = knob.parentElement.clientWidth;
@@ -316,5 +328,6 @@ const process = () => {
     // End of input events
 })();
 
-
-
+window.onunload = () => {
+    window.removeEventListener('loading', setLoading)
+}
