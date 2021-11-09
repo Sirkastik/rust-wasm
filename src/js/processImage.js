@@ -1,16 +1,16 @@
+import {
+    grayscale, invert, flip_horizontal,
+    rotate_90, rotate_180, rotate_270,
+    blur, sharpen, brighten, crop, contrast
+} from "../../pkg"
+
 // function to get a random number
 const getRnd = (min, max) => {
     return Math.floor(Math.random() * (max - min)) + min;
 }
 
 // function to process the image
-const process_img = async (effect, base64, value) => {
-    const {
-        grayscale, invert, flip_horizontal,
-        rotate_90, rotate_180, rotate_270,
-        blur, sharpen, brighten, crop, contrast
-    } = await import('../../pkg')
-    
+const process_img = (effect, base64, value) => {
     let imgDataURL;
     switch (effect) {
         case 'grayscale':
